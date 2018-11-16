@@ -1,0 +1,29 @@
+batch
+
+/subsystem=elytron/filesystem-realm=exampleFsRealm:add(path=fs-realm-users,relative-to=jboss.server.config.dir)
+
+/subsystem=elytron/filesystem-realm=exampleFsRealm:add-identity(identity=jane)
+
+/subsystem=elytron/filesystem-realm=exampleFsRealm:set-password(clear={password="passwordJane"}, identity=jane)
+
+/subsystem=elytron/filesystem-realm=exampleFsRealm:add-identity-attribute(identity=jane, name=Roles, value=["User"])
+
+/subsystem=elytron/filesystem-realm=exampleFsRealm:add-identity-attribute(identity=jane, name=Email, value=["jane@email.com", "jane_email@email.com"])
+
+/subsystem=elytron/filesystem-realm=exampleFsRealm:add-identity-attribute(identity=jane, name="Name", value=["Amanda Jane Doe"])
+
+/subsystem=elytron/filesystem-realm=exampleFsRealm:add-identity-attribute(identity=jane, name="Phone", value=["123 456 789", "789 456 123"])
+
+/subsystem=elytron/filesystem-realm=exampleFsRealm:add-identity-attribute(identity=jane, name="Location", value=["Prague"])
+
+/subsystem=elytron/simple-role-decoder=from-roles-attribute:add(attribute=Roles)
+
+/subsystem=elytron/security-domain=exampleFsSD:add(realms=[{realm=exampleFsRealm,role-decoder=from-roles-attribute}],default-realm=exampleFsRealm,permission-mapper=default-permission-mapper)
+
+/subsystem=elytron/http-authentication-factory=example-fs-http-auth:add(http-server-mechanism-factory=global,security-domain=exampleFsSD,mechanism-configurations=[{mechanism-name=BASIC,mechanism-realm-configurations=[{realm-name=exampleApplicationDomain}]}])
+
+/subsystem=undertow/application-security-domain=exampleApplicationDomain:add(security-domain=exampleFsSD)
+
+run-batch
+
+reload
