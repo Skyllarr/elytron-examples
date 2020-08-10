@@ -1,8 +1,6 @@
-# Demonstrate use of dynamic client ssl context with configuration of 2 reverse proxies
 
-Build wildfly server with following feature branches:
 
-## Generate certificates for 2 different mutual ssl contexts in $JBOSS_HOME/standalone/configuration
+## Generate certificates for 2 different mutual ssl contexts
 
 ```
 keytool -genkeypair -alias localhost1 -keyalg RSA -keysize 1024 -validity 365 -keystore server1.keystore.jks -dname "CN=localhost1" -keypass secret -storepass secret
@@ -29,10 +27,3 @@ keytool -importcert -keystore server2.truststore.jks -storepass secret -alias cl
 
 keytool -importcert -keystore client2.truststore.jks -storepass secret -alias localhost2 -trustcacerts -file server2.cer
 ```
-
-## Run configure.cli batch 
-
-# Test the dynamic client ssl context 
-Access to both http://localhost:8080/proxy and http://localhost:8080/proxy2 will successfully return Welcome to WildFly page.
-Server running on port 8080 will use dynamic ssl context to ping the other 2 ports with appropriate SSL contexts.
-The /proxy URL pings server on port 9443 and the /proxy2 URL pings port 10443.
